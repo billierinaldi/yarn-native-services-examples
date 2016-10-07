@@ -1,0 +1,263 @@
+{
+  "name": "ac1",
+  "lifetime": "2400",
+  "configuration": {
+    "properties": {
+      "env.ACCUMULO_CONF_DIR": "${PWD}/app/conf",
+      "env.DATA_DIR": "${site.accumulo-site.instance.volumes}",
+      "env.INSTANCE_NAME": "${site.client.instance.name}",
+      "env.ACCUMULO_MONITOR_BIND_ALL": "true",
+
+      "site.global.accumulo_root_password": "NOT_USED",
+      "site.global.monitor_protocol": "http",
+
+      "site.accumulo-metrics.template.file": "hadoop-metrics2-accumulo.properties.j2",
+      "site.accumulo-metrics.app_name": "${CLUSTER_NAME}",
+      "site.accumulo-metrics.metric_collector_host": "${NN_HOST}",
+      "site.accumulo-metrics.metric_collector_port": "6188",
+      "site.accumulo-metrics.metric_collector_lib": "",
+
+      "site.accumulo-env.template.file": "accumulo-env.sh.j2",
+      "site.accumulo-env.tserver_heapsize": "256m",
+      "site.accumulo-env.master_heapsize": "128m",
+      "site.accumulo-env.monitor_heapsize": "64m",
+      "site.accumulo-env.gc_heapsize": "64m",
+      "site.accumulo-env.other_heapsize": "128m",
+
+      "site.client.instance.name": "${USER}-${CLUSTER_NAME}",
+      "site.client.instance.zookeeper.host": "${@//site/accumulo-site/instance.zookeeper.host}",
+      "site.client.instance.zookeeper.timeout": "${@//site/accumulo-site/instance.zookeeper.timeout}",
+      "site.client.instance.rpc.ssl.enabled": "${@//site/accumulo-site/instance.rpc.ssl.enabled}",
+      "site.client.instance.rpc.ssl.clientAuth": "${@//site/accumulo-site/instance.rpc.ssl.clientAuth}",
+      "site.client.instance.rpc.sasl.enabled": "${@//site/accumulo-site/instance.rpc.sasl.enabled}",
+      "site.client.rpc.sasl.qop": "${@//site/accumulo-site/rpc.sasl.qop}",
+      "site.client.rpc.useJsse": "${@//site/accumulo-site/rpc.useJsse}",
+      "site.client.trace.span.receivers": "${@//site/accumulo-site/trace.span.receivers}",
+      "site.client.trace.zookeeper.path": "${@//site/accumulo-site/trace.zookeeper.path}",
+
+      "site.proxy.instance": "${@//site/client/instance.name}",
+      "site.proxy.zookeepers": "${@//site/accumulo-site/instance.zookeeper.host}",
+      "site.proxy.port": "42424",
+      "site.proxy.protocolFactory": "org.apache.thrift.protocol.TCompactProtocol$Factory",
+      "site.proxy.tokenClass": "org.apache.accumulo.core.client.security.tokens.PasswordToken",
+      "site.proxy.maxFrameSize": "16M",
+      "site.proxy.useMockInstance": "false",
+      "site.proxy.useMiniAccumulo": "false",
+
+      "site.accumulo-site.instance.volumes": "${DEFAULT_DATA_DIR}/data",
+      "site.accumulo-site.instance.zookeeper.host": "${ZK_HOST}",
+      "site.accumulo-site.instance.zookeeper.timeout": "30s",
+      "site.accumulo-site.instance.security.authenticator": "CustomAuthenticator",
+
+      "site.accumulo-site.general.security.credential.provider.paths": "jceks://hdfs/user/${USER}/accumulo-${CLUSTER_NAME}.jceks",
+      "site.accumulo-site.instance.rpc.ssl.enabled": "false",
+      "site.accumulo-site.instance.rpc.ssl.clientAuth": "false",
+      "site.accumulo-site.instance.rpc.sasl.enabled": "false",
+      "site.accumulo-site.rpc.sasl.qop": "auth",
+      "site.accumulo-site.rpc.useJsse": "false",
+      "site.accumulo-site.general.kerberos.keytab": "",
+      "site.accumulo-site.general.kerberos.principal": "",
+
+      "site.accumulo-site.tserver.memory.maps.native.enabled": "false",
+      "site.accumulo-site.tserver.memory.maps.max": "80M",
+      "site.accumulo-site.tserver.cache.data.size": "7M",
+      "site.accumulo-site.tserver.cache.index.size": "20M",
+      "site.accumulo-site.tserver.sort.buffer.size": "50M",
+      "site.accumulo-site.tserver.walog.max.size": "40M",
+
+      "site.accumulo-site.trace.user": "root",
+      "site.accumulo-site.trace.span.receivers": "org.apache.accumulo.tracer.ZooTraceClient",
+      "site.accumulo-site.trace.zookeeper.path": "/accumulo/tracers-${USER}-${CLUSTER_NAME}",
+
+      "site.accumulo-site.master.port.client": "0",
+      "site.accumulo-site.trace.port.client": "0",
+      "site.accumulo-site.tserver.port.client": "0",
+      "site.accumulo-site.gc.port.client": "0",
+      "site.accumulo-site.monitor.port.client": "50095",
+      "site.accumulo-site.monitor.port.log4j": "0",
+      "site.accumulo-site.master.replication.coordinator.port": "0",
+      "site.accumulo-site.replication.receipt.service.port": "0",
+
+      "site.accumulo-site.general.classpaths": "$ACCUMULO_HOME/lib/accumulo-server.jar,\n$ACCUMULO_HOME/lib/accumulo-core.jar,\n$ACCUMULO_HOME/lib/accumulo-start.jar,\n$ACCUMULO_HOME/lib/accumulo-fate.jar,\n$ACCUMULO_HOME/lib/accumulo-proxy.jar,\n$ACCUMULO_HOME/lib/[^.].*.jar,\n$ZOOKEEPER_HOME/zookeeper[^.].*.jar,\n$HADOOP_CONF_DIR,\n$HADOOP_PREFIX/[^.].*.jar,\n$HADOOP_PREFIX/lib/[^.].*.jar,\n$HADOOP_PREFIX/share/hadoop/common/.*.jar,\n$HADOOP_PREFIX/share/hadoop/common/lib/.*.jar,\n$HADOOP_PREFIX/share/hadoop/hdfs/.*.jar,\n$HADOOP_PREFIX/share/hadoop/mapreduce/.*.jar,\n$HADOOP_PREFIX/share/hadoop/yarn/.*.jar,"
+    },
+    "files": [
+      {
+        "type": "XML",
+        "dest_file": "accumulo-site.xml",
+        "src_file": "accumulo-site"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "accumulo-env.sh",
+        "src_file": "accumulo-env"
+      },
+      {
+        "type": "PROPERTIES",
+        "dest_file": "client.conf",
+        "src_file": "client"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "auditLog.xml",
+        "src_file": "audit-log"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "generic_logger.xml",
+        "src_file": "generic-logger"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "masters",
+        "src_file": "masters"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "slaves",
+        "src_file": "slaves"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "gc",
+        "src_file": "gc"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "monitor",
+        "src_file": "monitor"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "tracers",
+        "src_file": "tracers"
+      },
+      {
+        "type": "TEMPLATE",
+        "dest_file": "log4j.properties",
+        "src_file": "log4j"
+      }
+    ]
+  },
+  "components":
+    [
+      {
+        "name": "ACCUMULO_MASTER",
+        "number_of_containers": 1,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "/maybe_init.sh && /opt/accumulo/bin/accumulo master --address `hostname -I`",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        }
+      },
+      {
+        "name": "ACCUMULO_MONITOR",
+        "number_of_containers": 1,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "/wait_for_init.sh; /opt/accumulo/bin/accumulo monitor --address 0.0.0.0",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        },
+        "configuration": {
+          "properties": {
+            "export.org.apache.slider.monitor.host": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}",
+            "export.org.apache.slider.monitor.hostname": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOSTNAME}:${site.accumulo-site.monitor.port.client}",
+            "export.org.apache.slider.monitor.ip": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_IP}:${site.accumulo-site.monitor.port.client}",
+            "export.org.apache.slider.jmx": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}/xml",
+            "export.org.apache.slider.metrics": "http://${site.accumulo-metrics.metric_collector_host}:${site.accumulo-metrics.metric_collector_port}/ws/v1/timeline/metrics",
+            "export.org.apache.slider.jmxtest": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}/xml/${APP_NAME}/${CLUSTER_NAME}"
+          }
+        }
+      },
+      {
+        "name": "ACCUMULO_GC",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "/wait_for_init.sh; /opt/accumulo/bin/accumulo gc --address `hostname -I`",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        }
+      },
+      {
+        "name": "ACCUMULO_TRACER",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "/wait_for_init.sh; /opt/accumulo/bin/accumulo tracer --address `hostname -I`",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        }
+      },
+      {
+        "name": "ACCUMULO_TSERVER",
+        "number_of_containers": 1,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "/wait_for_init.sh; /opt/accumulo/bin/accumulo tserver --address `hostname -I`",
+        "resource": {
+          "cpus": 2,
+          "memory": "512"
+        }
+      },
+      {
+        "name": "ACCUMULO_PROXY",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "/wait_for_init.sh; /opt/accumulo/bin/accumulo proxy -p $ACCUMULO_CONF_DIR/proxy.properties",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        },
+        "configuration": {
+          "properties": {
+            "export.proxies": "${THIS_HOST}:${site.proxy.port}"
+          },
+          "files": [
+            {
+              "type": "PROPERTIES",
+              "dest_file": "proxy.properties",
+              "src_file": "proxy"
+            }
+          ]
+        }
+      },
+      {
+        "name": "ACCUMULO_CLIENT",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo",
+          "type": "DOCKER"
+        },
+        "launch_command": "",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        },
+        "configuration": {
+          "properties": {
+            "site.global.component_type": "client",
+            "site.accumulo-env.template.file": "accumulo-env-client.sh.j2"
+          }
+        }
+      }
+    ]
+}

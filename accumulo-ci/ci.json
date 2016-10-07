@@ -1,0 +1,129 @@
+{
+  "name": "ci1",
+  "lifetime": "2400",
+  "configuration": {
+    "properties": {
+      "env.APP_NAME": "${site.ci-env.APP_NAME}",
+      "env.INSTANCE_NAME": "${site.ci-env.INSTANCE_NAME}",
+      "env.ZOO_KEEPERS": "${site.ci-env.ZOO_KEEPERS}",
+      "env.ACCUMULO_USER": "${site.ci-env.ACCUMULO_USER}",
+      "env.PASS": "${site.ci-env.PASS}",
+      "env.TABLE": "${site.ci-env.TABLE}",
+      "env.NUM": "9223372036854775807",
+      "env.MIN": "0",
+      "env.MAX": "9223372036854775807",
+      "env.MAX_CF": "32767",
+      "env.MAX_CQ": "32767",
+      "env.MAX_MEM": "10000000",
+      "env.MAX_LATENCY": "600000",
+      "env.NUM_THREADS": "1",
+
+      "site.ci-env.APP_NAME": "${APP_NAME}",
+      "site.ci-env.INSTANCE_NAME": "${USER}-${CLUSTER_NAME}",
+      "site.ci-env.ZOO_KEEPERS": "${ZK_HOST}",
+      "site.ci-env.ACCUMULO_USER": "root",
+      "site.ci-env.PASS": "secret",
+      "site.ci-env.TABLE": "ci"
+    },
+    "files": [
+      {
+        "type": "PROPERTIES",
+        "dest_file": "ci-env.sh",
+        "src_file": "ci-env"
+      }
+    ]
+  },
+  "components":
+    [
+      {
+        "name": "ACCUMULO",
+        "artifact": {
+          "id": "accumulo",
+          "type": "APPLICATION"
+        }
+      },
+      {
+        "name": "INGESTER",
+        "number_of_containers": 1,
+        "artifact": {
+          "id": "accumulo-ci",
+          "type": "DOCKER"
+        },
+        "launch_command": "/init_ci.sh $APP_NAME && accumulo org.apache.accumulo.test.continuous.ContinuousIngest $DEBUG_OPT $VIS_OPT -i $INSTANCE_NAME -z $ZOO_KEEPERS -u $ACCUMULO_USER -p $PASS --table $TABLE --num $NUM --min $MIN --max $MAX --maxColF $MAX_CF --maxColQ $MAX_CQ --batchMemory $MAX_MEM --batchLatency $MAX_LATENCY --batchThreads $NUM_THREADS $CHECKSUM_OPT",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        }
+      },
+      {
+        "name": "WALKER",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo-ci",
+          "type": "DOCKER"
+        },
+        "launch_command": "/init_ci.sh $APP_NAME && accumulo org.apache.accumulo.test.continuous.ContinuousWalk $DEBUG_OPT $AUTH_OPT -i $INSTANCE_NAME -z $ZOO_KEEPERS -u $ACCUMULO_USER -p $PASS --table $TABLE --min $MIN --max $MAX --sleep $SLEEP_TIME",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        },
+        "configuration": {
+          "properties": {
+            "env.SLEEP_TIME": "10"
+          }
+        }
+      },
+      {
+        "name": "BATCH_WALKER",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo-ci",
+          "type": "DOCKER"
+        },
+        "launch_command": "/init_ci.sh $APP_NAME && accumulo org.apache.accumulo.test.continuous.ContinuousBatchWalker $DEBUG_OPT $AUTH_OPT -i $INSTANCE_NAME -z $ZOO_KEEPERS -u $ACCUMULO_USER -p $PASS --table $TABLE --min $MIN --max $MAX --sleep $BATCH_WALKER_SLEEP --numToScan $BATCH_WALKER_BATCH_SIZE --scanThreads $BATCH_WALKER_THREADS",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        },
+        "configuration": {
+          "properties": {
+            "env.BATCH_WALKER_SLEEP": "1800",
+            "env.BATCH_WALKER_BATCH_SIZE": "10000",
+            "env.BATCH_WALKER_THREADS": "8"
+          }
+        }
+      },
+      {
+        "name": "SCANNER",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo-ci",
+          "type": "DOCKER"
+        },
+        "launch_command": "/init_ci.sh $APP_NAME && accumulo org.apache.accumulo.test.continuous.ContinuousScanner $DEBUG_OPT $AUTH_OPT -i $INSTANCE_NAME -z $ZOO_KEEPERS -u $ACCUMULO_USER -p $PASS --table $TABLE --min $MIN --max $MAX --sleep $SCANNER_SLEEP_TIME --numToScan $SCANNER_ENTRIES",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        },
+        "configuration": {
+          "properties": {
+            "env.SCANNER_SLEEP_TIME": "10",
+            "env.SCANNER_ENTRIES": "5000"
+          }
+        }
+      },
+      {
+        "name": "STATS_COLLECTOR",
+        "number_of_containers": 0,
+        "artifact": {
+          "id": "accumulo-ci",
+          "type": "DOCKER"
+        },
+        "launch_command": "/init_ci.sh $APP_NAME && accumulo org.apache.accumulo.test.continuous.ContinuousStatsCollector --table $TABLE -i $INSTANCE_NAME -z $ZOO_KEEPERS -u $ACCUMULO_USER -p $PASS",
+        "resource": {
+          "cpus": 2,
+          "memory": "256"
+        }
+      }
+    ]
+}
