@@ -54,6 +54,5 @@ docker run -t accumulo-ci /destroy.sh ci1
 
 For the accumulo app, user passwords can be kept out of the appConfig due to the use of the CustomAuthenticator along with Accumulo's CredentialProviderShim.
 This method reads passwords from a JavaKeyStore in HDFS instead of from the command line or from a configuration file.
-Continuous ingest clients are designed to read the user password from the command line, so for the continuous ingest app we must have the password in the appCon
-fig.
+Continuous ingest clients are designed to read the user password from the command line, so for the continuous ingest app we must have the password in the appConfig.
 This is not a problem for a toy example like this one, but in designing other apps for YARN native services, developers should consider using a CredentialProvider approach or enabling Kerberos.
