@@ -130,9 +130,7 @@
       "export.org.apache.slider.monitor.host": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}",
       "export.org.apache.slider.monitor.hostname": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOSTNAME}:${site.accumulo-site.monitor.port.client}",
       "export.org.apache.slider.monitor.ip": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_IP}:${site.accumulo-site.monitor.port.client}",
-      "export.org.apache.slider.jmx": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}/xml",
-      "export.org.apache.slider.metrics": "http://${site.accumulo-metrics.metric_collector_host}:${site.accumulo-metrics.metric_collector_port}/ws/v1/timeline/metrics",
-      "export.org.apache.slider.jmxtest": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}/xml/${APP_NAME}/${CLUSTER_NAME}"
+      "export.org.apache.slider.jmx": "${site.global.monitor_protocol}://${ACCUMULO_MONITOR_HOST}:${site.accumulo-site.monitor.port.client}/xml"
     },
     "ACCUMULO_GC": {
       "docker.startCommand": "/wait_for_init.sh; /opt/accumulo/bin/accumulo gc --address `hostname -I`"
