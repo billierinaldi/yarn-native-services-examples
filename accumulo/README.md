@@ -7,6 +7,10 @@ This is a toy nonsecure example for testing out the new YARN features.
 
 First, build the [yarn-native-services branch](https://github.com/apache/hadoop/tree/yarn-native-services) of Hadoop with patches [YARN-5690](https://issues.apache.org/jira/browse/YARN-5690) and [YARN-5701](https://issues.apache.org/jira/browse/YARN-5701) applied.
 Include the -Pnative flag when building.
+I used the following mvn command:
+```
+mvn clean package -Pdist -Pnative -DskipTests -Dtar -Dcontainer-executor.additional_cflags="-DDEBUG" -Dmaven.javadoc.skip=true
+```
 
 Install, configure, and start HDFS and YARN, as well as ZooKeeper.
 Beyond the standard YARN configurations, set the following values in yarn-site.xml.
