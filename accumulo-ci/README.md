@@ -23,6 +23,9 @@ Launch a YARN app:
 docker run -it accumulo-ci /launch.sh ci1
 ```
 
+You will be prompted for a number of sensitive properties, including the Accumulo root user password.
+You should use the same value for the root password that the appConfig has for the site.ci-env.PASS property ("secret" by default).
+
 Create a client image:
 ```
 docker run -t --name accumulo-ci1 accumulo-ci /setup_ci_client.sh ci1

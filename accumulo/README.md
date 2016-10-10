@@ -46,6 +46,8 @@ Launch a YARN app:
 docker run -it accumulo /launch.sh ac1
 ```
 
+You will be prompted for a number of sensitive properties, including the Accumulo root user password.
+
 Create a client image:
 ```
 docker run -t --name accumulo-ac1 accumulo /setup_client.sh ac1
